@@ -1,19 +1,21 @@
 const moment = require("moment");
-const UserModel = require("../models/user");
-const User = new UserModel();
+const articleModel = require("../models/article");
+const Article = new articleModel();
+// const userRoleModel = require("../models/user_role.js");
+// const userRole = new userRoleModel();
 
-const user = {
+const article = {
   index: async function (req, res, next) {
-    var users = await User.all();
+    var articles = await Article.all();
     try {
-      var usersInfo = users.map((data) => {
+      var articlesInfo = articles.map((data) => {
         data.create_time = moment(data.create_time).format(
           "YYYY-MM-DD HH:mm:ss"
         );
         return data;
       });
-      // console.log("userContrl：", usersInfo);
-      res.json({ code: 200, data: { usersInfo: usersInfo } });
+      // console.log("articleContrl：", articlesInfo);
+      res.json({ code: 200, data: { articlesInfo: articlesInfo } });
     } catch (e) {
       res.locals.error = e;
       res.json({ code: 0, data: e });
@@ -31,15 +33,15 @@ const user = {
       return;
     }
     try {
-      const user = await User.insert({ name, phone, password });
-      const userId = user[0];
-      // await userRole.insert({
-      //   user_id: userId,
+      const article = await Article.insert({ name, phone, password });
+      const articleId = article[0];
+      // await articleRole.insert({
+      //   article_id: articleId,
       //   role_id: role,
       // });
       res.json({
         code: 200,
-        data: { code: 200, id: userId },
+        data: { code: 200, id: articleId },
         message: "创建成功",
       });
     } catch (e) {
@@ -57,8 +59,8 @@ const user = {
       return;
     }
     try {
-      await User.update(id, { name, phone, password });
-      // await userRole.where({ user_id: id }).update({ role_id: roleID });
+      await Article.update(id, { name, phone, password });
+      // await articleRole.where({ article_id: id }).update({ role_id: roleID });
       res.json({
         code: 200,
         data: { code: 200, message: "编辑成功"},
@@ -74,4 +76,4 @@ const user = {
   },
 };
 
-module.exports = user;
+module.exports = article;

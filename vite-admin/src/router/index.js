@@ -4,8 +4,8 @@ import routes from './routes';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css' // nprogress样式
 import userService from '@/services/user';
-import roleService from '@/services/role';
-import permissionService from '@/services/permission';
+// import roleService from '@/services/role';
+// import permissionService from '@/services/permission';
 import tokenService from '@/services/token';
 import { useStore } from '@/stores/index.js';
 // import { useRoute } from 'vue-router';
@@ -64,30 +64,30 @@ appRouter.beforeEach(async (to, from, next) => {
       store.setUsers(users);
       console.log('路由导航/store.users：', store.users);
 
-      const roles = await roleService
-        .getRoles()
-        .then(function (data) {
-          return data.rolesInfo;
-        })
-        .catch(function (error) {
-          console.log(error);
-          return;
-        });
-      console.log('路由导航/roles：', roles);
-      store.setRoles(roles);
+      // const roles = await roleService
+      //   .getRoles()
+      //   .then(function (data) {
+      //     return data.rolesInfo;
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //     return;
+      //   });
+      // console.log('路由导航/roles：', roles);
+      // store.setRoles(roles);
       // console.log('路由导航/store.roles：', store.roles, new Date());
 
-      const allPermissions = await permissionService
-        .getAllPermissions()
-        .then(function (data) {
-          return data.permissions;
-        })
-        .catch(function (error) {
-          console.log(error);
-          return;
-        });
-      console.log('路由导航/allPermissions：', allPermissions);
-      store.setAllPermissions(allPermissions);
+      // const allPermissions = await permissionService
+      //   .getAllPermissions()
+      //   .then(function (data) {
+      //     return data.permissions;
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //     return;
+      //   });
+      // console.log('路由导航/allPermissions：', allPermissions);
+      // store.setAllPermissions(allPermissions);
       // console.log('路由导航/store.allPermissions：', store.allPermissions, new Date());
 
       const user = await tokenService
@@ -104,24 +104,24 @@ appRouter.beforeEach(async (to, from, next) => {
       const userId = user.id;
       console.log('路由导航/登录用户ID：', userId);
 
-      const permissions = await permissionService
-        .getPermissions({ userId: userId })
-        .then(function (data) {
-          return data.permissions;
-        })
-        .catch(function (error) {
-          console.log(error);
-          return;
-        });
-      console.log('路由导航/登录用户权限：', permissions);
-      store.setPermissions(permissions);
+      // const permissions = await permissionService
+      //   .getPermissions({ userId: userId })
+      //   .then(function (data) {
+      //     return data.permissions;
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //     return;
+      //   });
+      // console.log('路由导航/登录用户权限：', permissions);
+      // store.setPermissions(permissions);
       // console.log('路由导航/store.permissions：', store.permissions, new Date());
 
       // 没有要去的页面的权限，就跳去Forbidden页面
-      if (to.meta.permission && !permissions.includes(to.meta.permission) && !['Forbidden'].includes(to.name)) {
-        next({ name: 'Forbidden' });
-        return;
-      }
+      // if (to.meta.permission && !permissions.includes(to.meta.permission) && !['Forbidden'].includes(to.name)) {
+      //   next({ name: 'Forbidden' });
+      //   return;
+      // }
       appRouter.firstInit = true;
       // console.log('路由导航/firstInit：',appRouter.firstInit,new Date())
     } catch (e) {

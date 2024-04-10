@@ -1,6 +1,8 @@
 const moment = require("moment");
 const UserModel = require("../models/user");
 const User = new UserModel();
+// const userRoleModel = require("../models/user_role.js");
+// const userRole = new userRoleModel();
 
 const user = {
   index: async function (req, res, next) {
@@ -72,6 +74,23 @@ const user = {
   delete: async function (req, res, next) {
 
   },
+    // renderEdit: async function (req, res, next) {
+  //   try {
+  //     var id = req.body.id;
+  //     // console.log("用户控制/renderEdit/id：", id);
+  //     const userArr = await User.select({ id });
+  //     const user = userArr[0];
+  //     // console.log("用户控制/renderEdit/user：", user);
+  //     const role = await userRole.select({ user_id: id });
+  //     var roleID = role[0].role_id;
+  //     // console.log("用户控制/renderEdit/roleID：", roleID);
+  //     const userInfo = { ...user, role: `${roleID}`};
+  //     console.log("用户控制/renderEdit/userInfo：", userInfo);
+  //     res.json({ code: 200, data: { code: 200, userInfo: userInfo } });
+  //   } catch (e) {
+  //     res.json({ code: 0, data: { code: 0, e } });
+  //   }
+  // },
 };
 
 module.exports = user;

@@ -1,13 +1,11 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+// import { computed } from 'vue'
+// import { useRoute } from 'vue-router'
 import BasicLayoutHeader from './BasicLayoutHeader.vue'
 import BasicLayoutSider from './BasicLayoutSider.vue'
 import BasicLayoutFooter from './BasicLayoutFooter.vue';
-
-const route = useRoute()
-
-const breadcrumb = computed(() => route.matched.filter((data) => data.meta?.breadcrumb))
+// const route = useRoute()
+// const breadcrumb = computed(() => route.matched.filter((data) => data.meta?.breadcrumb))
 
 </script>
 
@@ -17,23 +15,13 @@ const breadcrumb = computed(() => route.matched.filter((data) => data.meta?.brea
     <div class="page-mainer">
       <BasicLayoutHeader class="page-header" />
       <div class="page-body">
-        <el-scrollbar >
-          <div class="breadcrumb-container">
-            <a-breadcrumb separator="/">
-              <a-breadcrumb-item v-for="(step, index) in breadcrumb" :key="step.name">
-                <router-link v-if="index < breadcrumb.length - 1" :to="{ name: step.name }">{{ step.meta.breadcrumb.name
-                  }}</router-link>
-                <span v-else>{{ step.meta.breadcrumb.name }}</span>
-              </a-breadcrumb-item>
-            </a-breadcrumb>
-          </div>
+        <el-scrollbar>
           <div class="page-body-content-wrapper">
             <router-view></router-view>
             <BasicLayoutFooter class="page-body-footer" />
           </div>
         </el-scrollbar>
       </div>
-      <!-- <BasicLayoutFooter class="page-basic-footer" /> -->
     </div>
   </div>
 </template>
@@ -56,15 +44,21 @@ const breadcrumb = computed(() => route.matched.filter((data) => data.meta?.brea
     padding: 8px;
     padding-bottom: 0;
     height: 1px;
+
     :deep(.el-scrollbar__view) {
       height: 100%;
     }
-    .page-body-content-wrapper{
+
+    .page-body-content-wrapper {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: calc(100% - 30px);
+      height: 100%;
     }
+  }
+
+  .page-header {
+    flex: none;
   }
 
   .breadcrumb-container {
@@ -72,10 +66,6 @@ const breadcrumb = computed(() => route.matched.filter((data) => data.meta?.brea
     width: 100%;
     padding: 4px 8px;
     // margin-bottom: 20px;
-  }
-
-  .page-header {
-    flex: none;
   }
 
   .breadcrumb-item {

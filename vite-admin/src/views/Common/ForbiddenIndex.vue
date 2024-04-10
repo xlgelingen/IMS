@@ -11,7 +11,7 @@ import BasicLayoutFooter from '@/components/layout/BasicLayoutFooter.vue';
                 <div class="content-title">403</div>
                 <div class="content-subtitle">Sorry, you are not authorized to access this page.</div>
                 <div class="content-btn-box">
-                    <a href="/">
+                    <a href="/admin">
                         <button type="button" class="content-btn">
                             <span>Back to home</span>
                         </button>

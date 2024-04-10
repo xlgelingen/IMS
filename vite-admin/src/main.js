@@ -1,4 +1,5 @@
 import './assets/css/main.css';
+import "./assets/iconfont/iconfont.css";
 
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -15,6 +16,8 @@ import 'ant-design-vue/dist/reset.css';
 import 'virtual:svg-icons-register';
 import SvgIcon from '@/components/common/iconSvg.vue';
 
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
 const app = createApp(App);
 
 app.use(createPinia());
@@ -26,6 +29,7 @@ app.use(ElementPlus, {
 });
 
 app.use(Antd)
+app.use(CKEditor)
 
 //全局注册组件，<svg-icon></svg-icon>
 app.component('SvgIcon', SvgIcon);

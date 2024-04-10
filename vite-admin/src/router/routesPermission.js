@@ -17,7 +17,7 @@ const UserCreate = () =>
 
 export default [
   {
-    path: '/permission',
+    path: 'permission',
     name: 'Permission',
     redirect: { name: 'RoleIndex' },
     meta: {

@@ -1,7 +1,7 @@
 const Base = require("./base");
 
 class rolePermission extends Base{
-    constructor(props = "role_permission"){
+    constructor(props = "classification_article"){
         super(props);
     }
 }

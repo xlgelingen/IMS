@@ -1,42 +1,57 @@
 import BasicLayout from '@/components/layout/BasicLayout.vue';
-import Home from '@/views/HomeIndex.vue';
+// import Home from '@/views/HomeIndex.vue';
 import NotFound from '@/views/Common/NotFound.vue';
-import Forbidden from '@/views/Common/ForbiddenIndex.vue'
-import AccountLogin from '@/views/Common/AccountLogin.vue'
-import routesPermission from './routesPermission'
-import routesArticle from './routesArticle'
+import Forbidden from '@/views/Common/ForbiddenIndex.vue';
+import AccountLogin from '@/views/Common/AccountLogin.vue';
+import routesArticle from './routesArticle';
+const ClassifyIndex = () =>
+  import(/* webpackChunkName: "Classify" */ '@/views/Classify/ClassifyIndex.vue');
+const UserIndex = () => import(/* webpackChunkName: "Manager" */ '@/views/Manager/UserIndex.vue');
 
 export default [
   {
-    path: '/',
+    path: '/admin',
     name: 'Root',
     component: BasicLayout,
     redirect: {
-      name: 'Home'
+      name: 'UserIndex'
     },
     children: [
       {
-        path: '/',
-        name: 'Home',
-        component: Home,
+        path: 'manager',
+        name: 'UserIndex',
+        component: UserIndex,
         meta: {
           nav: {
-            icon: 'icon-home',
-            title: '首页'
+            icon: 'icon-user',
+            title: '用户管理'
           },
           breadcrumb: {
-            name: '首页'
+            name: '用户列表'
           }
-        },
+        }
       },
-      ...routesArticle,
-      ...routesPermission
+      {
+        path: 'classify',
+        name: 'ClassifyIndex',
+        component: ClassifyIndex,
+        meta: {
+          nav: {
+            icon: 'icon-goods',
+            title: '分类管理'
+          },
+          breadcrumb: {
+            name: '分类'
+          }
+        }
+      },
+      ...routesArticle
     ]
   },
   {
     path: '/login',
     name: 'AccountLogin',
-    component: AccountLogin,
+    component: AccountLogin
   },
   {
     path: '/403',
@@ -44,8 +59,8 @@ export default [
     component: Forbidden
   },
   {
-    path: "/404",
-    name: "NotFound",
+    path: '/404',
+    name: 'NotFound',
     component: NotFound
   },
   {

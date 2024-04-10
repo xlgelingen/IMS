@@ -1,7 +1,7 @@
 const Base = require("./base");
 
 class Permission extends Base{
-    constructor(props = "permissions"){
+    constructor(props = "classifications"){
         super(props);
     }
 }

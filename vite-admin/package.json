@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@ckeditor/ckeditor5-build-classic": "^41.2.1",
+    "@ckeditor/ckeditor5-vue": "^5.1.0",
     "ant-design-vue": "4",
     "axios": "^1.6.7",
     "element-plus": "^2.6.1",

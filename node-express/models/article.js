@@ -1,7 +1,7 @@
 const Base = require("./base");
 
 class Role extends Base{
-    constructor(props = "roles"){
+    constructor(props = "articles"){
         super(props);
     }
 }

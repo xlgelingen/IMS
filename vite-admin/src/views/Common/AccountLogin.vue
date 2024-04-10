@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref, reactive, onMounted } from 'vue';
-import { ElMessage} from 'element-plus'
+import { ElMessage } from 'element-plus'
 import loginService from '@/services/login'
 import Cookies from 'js-cookie';
 import BasicLayoutFooter from '@/components/layout/BasicLayoutFooter.vue';
@@ -171,70 +171,70 @@ function handleAccountSubmit() {
 </script>
 <template>
   <div class="login-page">
-    <div class="company-container">
-      <img class="company-info-logo" src="@/assets/images/header-logo.svg" />
-      <div class="company-info-desc">小具影响力的 Web 设计规范</div>
-    </div>
-    <div class="form-container">
-      <div class="change-form-list">
-        <div :class="{ 'active': phoneIsActive }" class="change-form-item" @click="phoneActive">手机号登录</div>
-        <div :class="{ 'active': accountIsActive }" class="change-form-item" @click="accountActive">账户密码登录</div>
-      </div>
-      <div class="login-form login-form-phone" v-show="phoneIsActive">
-        <!-- Element UI 的表单组件 将表单组件与 formData 数据对象进行双向数据绑定，指定表单的验证规则为 smsRules 对象， -->
-        <el-form :model="formData" :rules="smsRules">
-          <!-- prop 属性：指定表单项的字段名，用于验证规则的匹配。 -->
-          <el-form-item prop="phone">
-            <!-- Element UI 的输入框组件，autocomplete="off"关闭自动填充功能 -->
-            <el-input type="number" placeholder="请输手机号" v-model="formData.phone" autocomplete="on"></el-input>
-          </el-form-item>
-          <el-form-item prop="code">
-            <!-- <el-col>：Element UI 的栅格布局组件，用于实现表单项的布局；:span="14"：指定栅格列的宽度比例，这里表示该栅格宽度为14个列 -->
-            <el-col :span="14">
-              <el-input type="text" placeholder="请输入验证码" v-model="formData.code" autocomplete="off"></el-input>
-            </el-col>
-            <el-col :span="1"> </el-col>
-            <el-col :span="5">
-              <a-button :disabled="!canSendSms" :smsDisabled="smsDisabled" @click="handleSmsCode"
-                class="login-form-smsText">{{ smsText
-                }}</a-button>
-            </el-col>
-          </el-form-item>
-          <div style="display: flex; justify-content: space-between;">
-            <el-form-item prop="checked">
-              <el-checkbox v-model="formData.checked">自动登录</el-checkbox>
-            </el-form-item>
-            <a class="login-form-forget">忘记密码 ?</a>
+    <div class="page-content">
+      <img class="content-logo" src="@/assets/images/login.png" />
+      <div class="form-container">
+        <div class="form-container-top">
+          <div class="change-form-list">
+            <div :class="{ 'active': phoneIsActive }" class="change-form-item" @click="phoneActive">手机号登录</div>
+            <div :class="{ 'active': accountIsActive }" class="change-form-item" @click="accountActive">账户密码登录</div>
           </div>
-          <el-form-item>
-            <!-- type="primary"：设置按钮的样式为主要样式 -->
-            <a-button style="width: 100%" type="primary" @click="handlePhoneSubmit"
-              class="login-form-loginBtn">登录</a-button>
-          </el-form-item>
-        </el-form>
-      </div>
+          <div class="login-form login-form-phone" v-show="phoneIsActive">
+            <el-form :model="formData" :rules="smsRules">
+              <el-form-item prop="phone">
+                <el-input type="number" placeholder="请输手机号" v-model="formData.phone" autocomplete="on"></el-input>
+              </el-form-item>
+              <el-form-item prop="code">
+                <el-col :span="14">
+                  <el-input type="text" placeholder="请输入验证码" v-model="formData.code" autocomplete="off"></el-input>
+                </el-col>
+                <el-col :span="1"> </el-col>
+                <el-col :span="5">
+                  <a-button :disabled="!canSendSms" :smsDisabled="smsDisabled" @click="handleSmsCode"
+                    class="login-form-smsText">{{ smsText
+                    }}</a-button>
+                </el-col>
+              </el-form-item>
+              <div style="display: flex; justify-content: space-between;">
+                <el-form-item prop="checked">
+                  <el-checkbox v-model="formData.checked">自动登录</el-checkbox>
+                </el-form-item>
+                <a class="login-form-forget">忘记密码 ?</a>
+              </div>
+              <el-form-item>
+                <a-button style="width: 100%" type="primary" @click="handlePhoneSubmit"
+                  class="login-form-loginBtn">登录</a-button>
+              </el-form-item>
+            </el-form>
+          </div>
 
-      <div class="login-form login-form-account" v-show="accountIsActive">
-        <el-form :model="formData" :rules="smsRules">
-          <el-form-item prop="phone">
-            <el-input type="number" placeholder="请输手机号" v-model="formData.phone" autocomplete="on"></el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-col :span="24">
-              <el-input type="text" placeholder="请输入密码" v-model="formData.password" autocomplete="on"></el-input>
-            </el-col>
-          </el-form-item>
-          <div style="display: flex; justify-content: space-between;">
-            <el-form-item prop="checked">
-              <el-checkbox v-model="formData.checked">自动登录</el-checkbox>
-            </el-form-item>
-            <a class="login-form-forget">忘记密码 ?</a>
+          <div class="login-form login-form-account" v-show="accountIsActive">
+            <el-form :model="formData" :rules="smsRules">
+              <el-form-item prop="phone">
+                <el-input type="number" placeholder="请输手机号" v-model="formData.phone" autocomplete="on"></el-input>
+              </el-form-item>
+              <el-form-item prop="password">
+                <el-col :span="24">
+                  <el-input type="text" placeholder="请输入密码" v-model="formData.password" autocomplete="on"></el-input>
+                </el-col>
+              </el-form-item>
+              <div style="display: flex; justify-content: space-between;">
+                <el-form-item prop="checked">
+                  <el-checkbox v-model="formData.checked">自动登录</el-checkbox>
+                </el-form-item>
+                <a class="login-form-forget">忘记密码 ?</a>
+              </div>
+              <el-form-item>
+                <a-button style="width: 100%" type="primary" @click="handleAccountSubmit"
+                  class="login-form-loginBtn">登录</a-button>
+              </el-form-item>
+            </el-form>
           </div>
-          <el-form-item>
-            <a-button style="width: 100%" type="primary" @click="handleAccountSubmit"
-              class="login-form-loginBtn">登录</a-button>
-          </el-form-item>
-        </el-form>
+        </div>
+        <div class="form-container-bottom">
+          <span class="fcb-register-text">没有账户？</span>
+          <span class="fcb-register-link">注册</span>
+        </div>
       </div>
     </div>
     <BasicLayoutFooter />
@@ -246,27 +246,41 @@ function handleAccountSubmit() {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr');
-  background-size: 100% 100%;
-  background-position: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  // background-image: url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr');
+  // background-size: 100% 100%;
+  // background-position: center;
   padding-top: 130px;
   box-sizing: border-box;
 }
 
-.company-container {
-  text-align: center;
+.page-content {
+  flex: 1;
+  display: flex;
+  width: fit-content;
 
-  .company-info-logo {
-    height: 44px;
-  }
-
-  .company-info-desc {
-    margin-top: 12px;
-    font-size: 14px;
-    opacity: 0.5;
-    text-align: center;
+  .content-logo {
+    height: 460px;
+    width: 264px;
+    object-fit: cover;
   }
 }
+
+// .company-container {
+//   text-align: center;
+
+//   .company-info-logo {
+//     height: 44px;
+//   }
+
+//   .company-info-desc {
+//     margin-top: 12px;
+//     font-size: 14px;
+//     opacity: 0.5;
+//     text-align: center;
+//   }
+// }
 
 .change-form-list {
   display: flex;
@@ -297,10 +311,50 @@ function handleAccountSubmit() {
 }
 
 .form-container {
-  text-align: center;
-  max-width: 388px;
-  margin: 40px auto;
+  // text-align: center;
+  // max-width: 388px;
+  // margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-between;
   flex: 1;
+  width: 480px;
+  height: 460px;
+  background: #fff;
+  border-radius: 0 4px 4px 0;
+
+  .form-container-top {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 49px;
+    justify-content: center;
+  }
+
+  .form-container-bottom {
+    width: 480px;
+    height: 60px;
+    line-height: 60px;
+    background: rgba(0, 0, 0, .02);
+    text-align: center;
+    font-size: 14px;
+    // margin-top: 72px;
+    border-bottom-right-radius: 4px;
+
+    .fcb-register-text {
+      color: rgba(0, 0, 0, .45);
+    }
+
+    .fcb-register-link {
+      color: #1677ff;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover{
+        color: #69b1ff;
+      }
+    }
+  }
 }
 
 .login-form {

@@ -40,7 +40,7 @@ function logout() {
             <el-dropdown-item>
               <!-- 设置图标icon -->
               <PoweroffOutlined :style="{ marginRight: '4px' }" />
-              退出
+              退出系统
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>

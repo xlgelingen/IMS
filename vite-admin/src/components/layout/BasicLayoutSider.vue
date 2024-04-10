@@ -36,8 +36,9 @@ watch(route, (to, from) => {
         <div class="logo-section">
             <div class="header-logo-container">
                 <div class="header-logo-content" v-show="!isCollapse">
-                    <svg-icon class="header-logo-element" name="siderMenu-logo"></svg-icon>
-                    <h1 >Admin</h1>
+                    <!-- <svg-icon class="header-logo-element" name="siderMenu-logo"></svg-icon> -->
+                    <img src="https://www.jiker.com/_nuxt/img/f43b9a4.svg" class="header-logo" data-v-4b2afc42="">
+                    <h1>信息管理</h1>
                 </div>
                 <div class="header-logo-collapse-btn" @click="isCollapse = !isCollapse">
                     <RotateLeftOutlined />
@@ -54,16 +55,16 @@ watch(route, (to, from) => {
                         <el-sub-menu v-if="route.children?.length" :index="route.name" :key="route.path">
                             <!-- sub-menu子菜单的名字插槽 -->
                             <template #title>
-                                <svg-icon v-if="route.meta.nav?.icon" :name="`siderMenu-${route.meta.nav.icon}`" width="24px"
-                                    height="18px" style="margin-right: 5px;"></svg-icon>
+                                <svg-icon v-if="route.meta.nav?.icon" :name="`siderMenu-${route.meta.nav.icon}`"
+                                    width="24px" height="18px" style="margin-right: 5px;"></svg-icon>
                                 <span>{{ route.meta.nav.title }}</span>
                             </template>
                             <el-menu-item-group>
                                 <!-- :route 属性是一个自定义的属性，用于存储与当前菜单项关联的路由信息 -->
                                 <el-menu-item v-for="data in route.children" :key="data.name" :index="data.name"
                                     :route="{ name: data.name }">
-                                    <svg-icon v-if="data.meta.nav?.icon" :name="`siderMenu-${data.meta.nav.icon}`" width="24px"
-                                        height="18px" style="margin-right: 5px;"></svg-icon>
+                                    <svg-icon v-if="data.meta.nav?.icon" :name="`siderMenu-${data.meta.nav.icon}`"
+                                        width="24px" height="18px" style="margin-right: 5px;"></svg-icon>
                                     <span>{{ data.meta.nav.title }}</span>
                                 </el-menu-item>
                             </el-menu-item-group>
@@ -90,22 +91,24 @@ watch(route, (to, from) => {
     display: flex;
     flex-direction: column;
     border-right: 1px solid rgba(5, 5, 5, 0.06);
+    background-color: #fff;
 
 
     .menu-section {
         max-height: calc(100vh - 56px);
+        // background-color: rgba(255, 255, 255, 0.6);
     }
 }
 
 .menu-section {
     .el-menu {
         border-right: none;
-        background: linear-gradient(#ffffff, #f5f5f5 28%);
+        // background-color: rgba(255, 255, 255, 0.6);
     }
 
-    .el-menu-item-group {
-        background: #f5f5f5
-    }
+    // .el-menu-item-group {
+    //     // background: #f5f5f5
+    // }
 
     .el-menu-item.is-active {
         background-color: #ecf5ff;
@@ -118,6 +121,17 @@ watch(route, (to, from) => {
         background-color: inherit;
     }
 
+    .el-menu--vertical:not(.el-menu--collapse):not(.el-menu--popup-container) .el-menu-item {
+        &:first-child {
+            margin-top: 20px;
+        }
+
+        margin-bottom: 15px;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
 }
 
 .header-logo-container {
@@ -127,10 +141,16 @@ watch(route, (to, from) => {
     align-items: center;
     padding: 0 20px;
     background-color: rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
 
     .header-logo-content {
         display: flex;
         align-items: center;
+
+        .header-logo {
+            width: 50%;
+            // height: 61px;
+        }
 
         h1 {
             position: relative;
@@ -159,5 +179,11 @@ watch(route, (to, from) => {
         transition: all 0.2s ease;
         // width: 80px;
     }
+}
+</style>
+
+<style lang="less">
+.el-menu--vertical:not(.el-menu--collapse):not(.el-menu--popup-container) .el-menu-item-group__title {
+    padding: 0 !important;
 }
 </style>

@@ -1,45 +1,94 @@
 <script setup>
-import { useRouter } from 'vue-router';
 import { ref, reactive, computed } from 'vue';
 import { useStore } from '@/stores/index.js';
 // import { getEditData } from '@/utils/data.js'
 import { ElMessage } from 'element-plus'
 // import dataService from '@/services/data';
 import { Delete, EditPen } from '@element-plus/icons-vue'
-import BasicBreadcrumb from '@/components/layout/BasicBreadcrumb.vue';
-import articles from './articles.js'
 
-const router = useRouter();
 // const store = useStore();
-// const articles = store.articles;
+// const tableDatas = store.classifys;
+const tableDatas = [{ id: 1, name: '技术动态' }, { id: 2, name: '极客新闻' }, { id: 3, name: '通知公告' }, { id: 4, name: '技术热点' },];
 
-const pageIndex = ref(1);
-const pageSize = ref(10);
-
-const paginationCurrent = ref(1);
-const paginationTotal = articles.length
-
-// 使用 slice 方法获取分页后的用户数组
-const startIndex = computed(() => (pageIndex.value - 1) * pageSize.value);
-
-// 使用 slice 方法获取分页后的用户数组
-const tableDatas = computed(() => articles.slice(startIndex.value, startIndex.value + pageSize.value));
-
+const editDataVisible = ref(false);
+const addDataVisible = ref(false);
 const delDialogVisible = ref(false)
 
-function handelEditArticle(e) {
-    let id = Number(e.target.dataset.id);
-    router.push({ name: 'ArticleEdit', params: { id: `${id}` } })
+const editRules = {
+    id: [
+        { required: true, message: '请输入ID', trigger: 'blur' }
+    ],
+    name: [
+        { required: true, message: '请输入分类名称', trigger: 'blur' },
+    ],
 }
 
-function handelAddArticle() {
-    router.push({ name: 'ArticleCreate' })
+const addRules = {
+    id: [
+        { required: true, message: '请输入ID', trigger: 'blur' }
+    ],
+    name: [
+        { required: true, message: '请输入分类名称', trigger: 'blur' },
+    ],
+}
+
+var editData = reactive({});
+const originData = reactive({});
+
+const addRef = ref();
+const addData = reactive({
+    name: null,
+})
+
+function handeladdData() {
+    addDataVisible.value = true;
+}
+
+function handelEditData(e) {
+    originData.id = e.target.dataset.id;
+    originData.name = e.target.dataset.name;
+    Object.assign(editData, originData);
+    console.log('分类列表/editData', editData)
+    editDataVisible.value = true;
 }
 
 function handelDelData() {
     delDialogVisible.value = true;
 }
 
+async function handlesubmitData() {
+    if (!addData.name) {
+        ElMessage({
+            message: "params empty!",
+            type: 'error',
+        })
+        return
+    }
+    console.log("name: ", addData.name)
+    ElMessage({
+        message: '新建成功！',
+        type: 'success',
+    })
+    addDataVisible.value = false;
+}
+
+async function handleSaveData() {
+    if (!editData.id || !editData.name) {
+        ElMessage({
+            message: 'params empty!',
+            type: 'error',
+        })
+        return
+    }
+    console.log('id:', editData.id, "name: ", editData.name)
+
+    ElMessage({
+        message: '修改成功！',
+        type: 'success',
+    })
+    editDataVisible.value = false;
+
+}
 async function handleDelConfirm() {
     delDialogVisible.value = false;
     ElMessage({
@@ -71,18 +120,22 @@ const handleDelClose = () => {
     delDialogVisible.value = false;
 }
 
-function handleOnChange(index, size) {
-    pageIndex.value = index;
-    pageSize.value = size;
-}
+function handleResetForm() {
+    Object.assign(editData, originData);
+};
+
+function handleResetadd() {
+    addRef.value.resetFields();
+};
+
 </script>
 
 <template>
     <div class="page-body-content">
-        <BasicBreadcrumb />
         <div class="content-wrapper">
             <div class="content-header">
-                <div class="addArticle-btn" @click="handelAddArticle">新增文章</div>
+                <div class="addData-text">分类列表</div>
+                <div class="addData-btn" @click="handeladdData">新增分类</div>
             </div>
 
             <div class="content-mainer">
@@ -95,12 +148,7 @@ function handleOnChange(index, size) {
                         </th>
                         <th>
                             <div class="table-th">
-                                标题
-                            </div>
-                        </th>
-                        <th>
-                            <div class="table-th">
-                                分类
+                                分类名称
                             </div>
                         </th>
                         <th>
@@ -113,10 +161,9 @@ function handleOnChange(index, size) {
                         <tr class="table-data">
                             <td>{{ data.id }}</td>
                             <td>{{ data.name }}</td>
-                            <td>{{ data.classify }}</td>
                             <td style="display: flex; align-items: center">
                                 <div class="data-edit" :data-id="data.id" :data-name="data.name"
-                                    @click="handelEditArticle">
+                                    @click="handelEditData">
                                     <el-icon>
                                         <EditPen />
                                     </el-icon>
@@ -132,14 +179,44 @@ function handleOnChange(index, size) {
                         </tr>
                     </template>
                 </table>
-
-                <a-pagination v-model:current="paginationCurrent" size="small" show-quick-jumper
-                    :total="paginationTotal" show-size-changer @change="handleOnChange"
-                    :show-total="(total, range) => `第${range[0]}-${range[1]}条/总共 ${total}条`" class="table-pagination" />
             </div>
 
+            <el-dialog v-model="editDataVisible" :title="`正在编辑的分类名称：${originData.name}`" width="800">
+                <div class="content-form">
+                    <el-form :model="editData" :rules="editRules" status-icon label-position="top">
+                        <el-form-item prop="name" label="分类名称">
+                            <el-input type="text" placeholder="请输入分类名称" v-model="editData.name"
+                                autocomplete="on"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <a-space>
+                                <a-button type="primary" @click="handleSaveData">保存</a-button>
+                                <a-button @click="handleResetForm">重置</a-button>
+                            </a-space>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-dialog>
+
+            <el-dialog v-model="addDataVisible" title="新建分类" width="800">
+                <div class="content-form">
+                    <el-form :ref="addRef" :model="addData" :rules="addRules" status-icon label-position="top">
+                        <el-form-item prop="name" label="分类名称">
+                            <el-input type="text" placeholder="请输入分类名称" v-model="addData.name"
+                                autocomplete="on"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <a-space>
+                                <a-button type="primary" @click="handlesubmitData">提交</a-button>
+                                <a-button @click="handleResetadd">重置</a-button>
+                            </a-space>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-dialog>
+
             <el-dialog v-model="delDialogVisible" title="Tips" width="500" :before-close="handleDelClose">
-                <span>确定要删除文章吗？</span>
+                <span>确定要删除分类吗？</span>
                 <template #footer>
                     <div class="dialog-footer">
                         <a-button @click="delDialogVisible = false;" style="margin-right: 8px;">取消</a-button>
@@ -155,29 +232,32 @@ function handleOnChange(index, size) {
 
 <style type="text/css" lang="less" scoped>
 .page-body-content {
-    flex: 1;
+    margin: 40px 40px 20px 40px;
     min-width: 900px;
-    display: flex;
-    flex-direction: column;
-    // background-color: #fff;
+    background-color: #fff;
+    flex: 1;
 }
 
 .content-wrapper {
-    flex: 1;
-    margin: 40px 40px 20px 40px;
-    background-color: #fff;
+    border-radius: 10px;
+}
+
+.content-mainer {
+    padding: 24px;
+    padding-bottom: 60px;
+
 }
 
 .content-header {
     display: flex;
-    // justify-content: space-between;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 58px;
     padding: 0 24px;
     border-bottom: 1px solid #0000000F;
 
-    .addArticle-btn {
+    .addData-btn {
         color: #fff;
         background: #1890ff;
         box-shadow: 0 2px 0 rgba(5, 175, 255, 0.1);
@@ -192,12 +272,6 @@ function handleOnChange(index, size) {
             background: #40a9ff;
         }
     }
-}
-
-.content-mainer {
-    padding: 24px;
-    padding-bottom: 60px;
-
 }
 
 .data-edit,
@@ -215,6 +289,8 @@ function handleOnChange(index, size) {
         font-weight: 600;
     }
 }
+
+
 
 .table-container {
     width: 100%;
@@ -234,6 +310,11 @@ function handleOnChange(index, size) {
     text-align: left;
     border-bottom: 1px solid #0000000F;
     padding: 12px 0;
+    width: 35%;
+
+    &:first-child {
+        width: 30%;
+    }
 
     .table-th {
         border-right: 1px solid #0000000F;
@@ -256,8 +337,4 @@ function handleOnChange(index, size) {
     text-align: left;
 }
 
-.table-pagination {
-    margin-top: 24px;
-    text-align: right;
-}
 </style>

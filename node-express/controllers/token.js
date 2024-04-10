@@ -16,8 +16,6 @@ const tokenController = {
           name: decode.user_name,
           phone: decode.user_phone,
           password: decode.user_password,
-          role: decode.user_role,
-          permissions: decode.user_permissions,
       };
       res.json({code:200, data:{user:userInfo}})
     } catch (err) {
