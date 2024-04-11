@@ -14,6 +14,9 @@ const userService = {
   editUser(data){
     return request.put(API.editUser,data);
   },
+  delUser(data){
+    return request.delete(API.delUser,data);
+  },
 };
 
 export default userService;

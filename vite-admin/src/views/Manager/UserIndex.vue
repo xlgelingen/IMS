@@ -1,5 +1,4 @@
 <script setup>
-// import { useRoute, useRouter } from 'vue-router';
 import { ref, reactive, computed } from 'vue';
 import { useStore } from '@/stores/index.js';
 import { ElMessage } from 'element-plus'
@@ -8,8 +7,6 @@ import Cookies from 'js-cookie';
 import { Delete, EditPen } from '@element-plus/icons-vue'
 
 const store = useStore();
-// const route = useRoute();
-// const router = useRouter();
 
 const usersAll = store.users;
 
@@ -138,30 +135,25 @@ async function handlesubmitUser() {
         return
     }
     console.log("name: ", addUser.name, "phone: ", addUser.phone, "password:", addUser.password)
-    ElMessage({
-        message: '修改成功！',
-        type: 'success',
-    })
-    addUserVisible.value = false;
-    // await userService.addUser({ name: addUser.name, phone: addUser.phone, password: addUser.password}).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '新建成功！',
-    //             type: 'success',
-    //         })
-    //         setTimeout(() => {
-    //             location.reload()
-    //         }, 700)
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    await userService.addUser({ name: addUser.name, phone: addUser.phone, password: addUser.password}).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '新建成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        } else {
+            ElMessage({
+                message: '修改失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 async function handleSaveUser() {
@@ -179,58 +171,48 @@ async function handleSaveUser() {
         return
     }
 
-    ElMessage({
-        message: '新建成功！',
-        type: 'success',
-    })
-    editUserVisible.value = false;
-
-    // await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password}).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '修改成功！',
-    //             type: 'success',
-    //         })
-    //         setTimeout(() => {
-    //             if (userId.value !== loginUserID) {
-    //                 location.reload()
-    //             }
-    //         }, 700)
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password}).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '修改成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                if (userId.value !== loginUserID) {
+                    location.reload()
+                }
+            }, 700)
+        } else {
+            ElMessage({
+                message: '修改失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 async function handleEditConfirm() {
-    ElMessage({
-        message: '修改成功！',
-        type: 'success',
-    })
     editDialogVisible.value = false;
     editUserVisible.value = false;
-    // await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password }).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '修改成功！',
-    //             type: 'success',
-    //         })
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password }).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '修改成功！',
+                type: 'success',
+            })
+        } else {
+            ElMessage({
+                message: '修改失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
     const TOKEN_KEY = 'web_token';
     Cookies.remove(TOKEN_KEY);
     setTimeout(() => {
@@ -250,26 +232,23 @@ const handleEditClose = () => {
 
 async function handleDelConfirm() {
     delDialogVisible.value = false;
-    ElMessage({
-        message: '删除成功！',
-        type: 'success',
-    })
-    // await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password }).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '修改成功！',
-    //             type: 'success',
-    //         })
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    let id = userId.value;
+    await userService.delUser({ id}).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '删除成功！',
+                type: 'success',
+            })
+        } else {
+            ElMessage({
+                message: '删除失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
     setTimeout(() => {
         location.reload()
     }, 700)
@@ -424,7 +403,7 @@ function handleResetadd() {
                         </el-form-item>
                         <el-form-item>
                             <a-space>
-                                <a-button type="primary" @click="handlesubmitUser">保存</a-button>
+                                <a-button type="primary" @click="handlesubmitUser">提交</a-button>
                                 <a-button @click="handleResetadd">重置</a-button>
                             </a-space>
                         </el-form-item>

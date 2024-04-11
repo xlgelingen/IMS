@@ -101,6 +101,7 @@ export default {
   },
 
   delete(url = '', params = {}, config = {}) {
+    console.log('请求删除data',params)
     const OPTIONS = { params, ...config };
     return axiosInstance.delete(url, OPTIONS);
   }

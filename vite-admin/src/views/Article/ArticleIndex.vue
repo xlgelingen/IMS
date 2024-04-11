@@ -1,17 +1,15 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, reactive, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from '@/stores/index.js';
-// import { getEditData } from '@/utils/data.js'
 import { ElMessage } from 'element-plus'
-// import dataService from '@/services/data';
+import articleService from '@/services/article';
 import { Delete, EditPen } from '@element-plus/icons-vue'
 import BasicBreadcrumb from '@/components/layout/BasicBreadcrumb.vue';
-import articles from './articles.js'
 
 const router = useRouter();
-// const store = useStore();
-// const articles = store.articles;
+const store = useStore();
+const articles = store.articles;
 
 const pageIndex = ref(1);
 const pageSize = ref(10);
@@ -26,6 +24,7 @@ const startIndex = computed(() => (pageIndex.value - 1) * pageSize.value);
 const tableDatas = computed(() => articles.slice(startIndex.value, startIndex.value + pageSize.value));
 
 const delDialogVisible = ref(false)
+let delId = ref(null)
 
 function handelEditArticle(e) {
     let id = Number(e.target.dataset.id);
@@ -36,35 +35,32 @@ function handelAddArticle() {
     router.push({ name: 'ArticleCreate' })
 }
 
-function handelDelData() {
+function handelDelData(e) {
     delDialogVisible.value = true;
+    delId.value = e.target.dataset.id;
 }
 
 async function handleDelConfirm() {
     delDialogVisible.value = false;
-    ElMessage({
-        message: '删除成功！',
-        type: 'success',
-    })
-    // await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password }).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '修改成功！',
-    //             type: 'success',
-    //         })
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
-    setTimeout(() => {
-        location.reload()
-    }, 700)
+    await articleService.delArticle({ id: delId.value }).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '删除成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        } else {
+            ElMessage({
+                message: '删除失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 const handleDelClose = () => {

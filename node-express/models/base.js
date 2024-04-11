@@ -26,17 +26,6 @@ class Base {
     return knex(this.table).where(params).del();
   }
 
-  delPermission(params) {
-    // const permissionIds = params.map(data => data.permission_id);
-    // return knex(this.table).whereIn({permission_id: permissionIds}).andWhere({role_id: params[0].role_id}).del()
-    const permissionIds = params.map((data) => data.permission_id);
-    const roleId = params[0].role_id;
-    return knex(this.table)
-      .whereIn("permission_id", permissionIds)
-      .andWhere("role_id", roleId)
-      .del();
-  }
-
   where(params) {
     return knex(this.table).where(params);
   }

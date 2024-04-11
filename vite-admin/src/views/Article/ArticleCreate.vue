@@ -1,17 +1,13 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, reactive, computed } from 'vue';
-import { useStore } from '@/stores/index.js';
+import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus'
-// import { getEditData } from '@/utils/data.js'
-// import dataService from '@/services/data';
+import articleService from '@/services/article';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import BasicBreadcrumb from '@/components/layout/BasicBreadcrumb.vue';
-// import articles from './articles.js';
 
 const router = useRouter();
-// const store = useStore();
-// const articles = store.articles;
+
 let editor = ClassicEditor
 
 const formRef = ref();
@@ -42,32 +38,33 @@ function handleResetForm() {
 };
 
 async function handleSubmit() {
+    formData.content = formData.content.replace(/<[^>]+>/g, '');
     console.log('项目添加/formData', formData)
-    ElMessage({
-        message: '新建成功！',
-        type: 'success',
-    })
-    // await articleService.addArticle(formData).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '新建成功！',
-    //             type: 'success',
-    //         })
-    //         setTimeout(() => {
-    //             router.push({ name: 'ProjectIndex' }).then(() => {
-    //                 window.location.reload();
-    //             });
-    //         }, 700)
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    // ElMessage({
+    //     message: '新建成功！',
+    //     type: 'success',
+    // })
+    await articleService.addArticle(formData).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '新建成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                router.push({ name: 'ArticleIndex' }).then(() => {
+                    window.location.reload();
+                });
+            }, 700)
+        } else {
+            ElMessage({
+                message: '新建失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 </script>
@@ -90,19 +87,18 @@ async function handleSubmit() {
                     <a-form ref="formRef" name="basic" :model="formData" :rules="smsRules" :label-col="{ span: 4 }"
                         :wrapper-col="{ span: 17 }" :hideRequiredMark="hideRequiredMark" @finish="handleSubmit">
                         <a-form-item label="标题" name="name">
-                            <a-input v-model:value="formData.name" :title="formData.name"
-                                placeholder="请输入文章标题" />
+                            <a-input v-model:value="formData.name" :title="formData.name" placeholder="请输入文章标题" />
                         </a-form-item>
                         <a-form-item label="分类" name="classify">
                             <a-select v-model:value="formData.classify" placeholder="请选择分类" autocomplete="on">
-                                <a-select-option label="技术动态" value="1" />
-                                <a-select-option label="极客新闻" value="2" />
-                                <a-select-option label="通知公告" value="3" />
-                                <a-select-option label="技术热点" value="4" />
+                                <a-select-option value="1">技术动态</a-select-option>
+                                <a-select-option value="2">极客新闻</a-select-option>
+                                <a-select-option value="3">通知公告</a-select-option>
+                                <a-select-option value="4">技术热点</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item label="内容" name="formData.content" placeholder="请输入文章内容">
-                            <ckeditor :editor="editor" v-model="formData.content" ></ckeditor>
+                            <ckeditor :editor="editor" v-model="formData.content"></ckeditor>
                         </a-form-item>
                         <a-form-item v-if="!id" :wrapper-col="{ span: 14, offset: 4 }">
                             <a-button type="primary" html-type="submit">提交</a-button>
@@ -110,7 +106,7 @@ async function handleSubmit() {
                         </a-form-item>
                     </a-form>
                 </div>
-                <div> 
+                <div>
                 </div>
             </div>
         </div>
@@ -196,5 +192,3 @@ let editorConfig = {
         <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
     </div>
 </template> -->
-
-  

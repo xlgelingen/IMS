@@ -23,14 +23,14 @@ router.post('/admin/users/create', userController.insert);
 router.put('/admin/users/edit', userController.update);
 router.delete('/admin/users/del', userController.delete);
 
-router.get('/admin/articles/article-info', articleController.index);
-router.post('/admin/articles/create', articleController.insert);
-router.put('/admin/articles/edit', articleController.update);
-router.delete('/admin/articles/del', articleController.delete);
-
 router.get('/admin/classify/classify-info', classifyController.index);
 router.post('/admin/classify/create', classifyController.insert);
 router.put('/admin/classify/edit', classifyController.update);
 router.delete('/admin/classify/del', classifyController.delete);
+
+router.get('/admin/articles/article-info', articleController.index);
+router.post('/admin/articles/create', articleController.insert);
+router.put('/admin/articles/edit', articleController.update);
+router.delete('/admin/articles/del', articleController.delete);
 
 module.exports = router;

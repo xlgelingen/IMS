@@ -1,14 +1,14 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive } from 'vue';
 import { useStore } from '@/stores/index.js';
 // import { getEditData } from '@/utils/data.js'
 import { ElMessage } from 'element-plus'
-// import dataService from '@/services/data';
+import classifyService from '@/services/classify';
 import { Delete, EditPen } from '@element-plus/icons-vue'
 
-// const store = useStore();
-// const tableDatas = store.classifys;
-const tableDatas = [{ id: 1, name: '技术动态' }, { id: 2, name: '极客新闻' }, { id: 3, name: '通知公告' }, { id: 4, name: '技术热点' },];
+const store = useStore();
+const tableDatas = store.classifications;
+// const tableDatas = [{ id: 1, name: '技术动态' }, { id: 2, name: '极客新闻' }, { id: 3, name: '通知公告' }, { id: 4, name: '技术热点' },];
 
 const editDataVisible = ref(false);
 const addDataVisible = ref(false);
@@ -52,8 +52,9 @@ function handelEditData(e) {
     editDataVisible.value = true;
 }
 
-function handelDelData() {
+function handelDelData(e) {
     delDialogVisible.value = true;
+    editData.id = e.target.dataset.id;
 }
 
 async function handlesubmitData() {
@@ -65,11 +66,25 @@ async function handlesubmitData() {
         return
     }
     console.log("name: ", addData.name)
-    ElMessage({
-        message: '新建成功！',
-        type: 'success',
-    })
-    addDataVisible.value = false;
+    await classifyService.addClassify({ name: addData.name}).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '新建成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        } else {
+            ElMessage({
+                message: '新建失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 async function handleSaveData() {
@@ -81,39 +96,48 @@ async function handleSaveData() {
         return
     }
     console.log('id:', editData.id, "name: ", editData.name)
-
-    ElMessage({
-        message: '修改成功！',
-        type: 'success',
-    })
-    editDataVisible.value = false;
+    await classifyService.editClassify({ name: editData.name, id: editData.id}).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '修改成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        } else {
+            ElMessage({
+                message: '修改失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 
 }
 async function handleDelConfirm() {
     delDialogVisible.value = false;
-    ElMessage({
-        message: '删除成功！',
-        type: 'success',
-    })
-    // await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password }).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '修改成功！',
-    //             type: 'success',
-    //         })
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
-    setTimeout(() => {
-        location.reload()
-    }, 700)
+    await classifyService.delClassify({ id: editData.id}).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '删除成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                location.reload()
+            }, 700)
+        } else {
+            ElMessage({
+                message: '删除失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 const handleDelClose = () => {
@@ -336,5 +360,4 @@ function handleResetadd() {
 .table-container tr td {
     text-align: left;
 }
-
 </style>

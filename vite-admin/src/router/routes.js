@@ -1,5 +1,5 @@
 import BasicLayout from '@/components/layout/BasicLayout.vue';
-// import Home from '@/views/HomeIndex.vue';
+import Home from '@/views/HomeIndex.vue';
 import NotFound from '@/views/Common/NotFound.vue';
 import Forbidden from '@/views/Common/ForbiddenIndex.vue';
 import AccountLogin from '@/views/Common/AccountLogin.vue';
@@ -47,6 +47,15 @@ export default [
       },
       ...routesArticle
     ]
+  },
+  {
+    path: '/admin/front',
+    name: 'Home',
+    component: Home,
+    // redirect: {
+    //   name: 'UserIndex'
+    // },
+    children: []
   },
   {
     path: '/login',

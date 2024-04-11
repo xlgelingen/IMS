@@ -13,9 +13,8 @@ const user = {
         return data;
       });
       // console.log("userContrl：", usersInfo);
-      res.json({ code: 200, data: { usersInfo: usersInfo } });
+      res.json({ code: 200, data: { code: 200, usersInfo: usersInfo } });
     } catch (e) {
-      res.locals.error = e;
       res.json({ code: 0, data: e });
     }
   },
@@ -61,7 +60,7 @@ const user = {
       // await userRole.where({ user_id: id }).update({ role_id: roleID });
       res.json({
         code: 200,
-        data: { code: 200, message: "编辑成功"},
+        data: { code: 200, message: "编辑成功" },
       });
     } catch (e) {
       console.log(e.message);
@@ -70,7 +69,22 @@ const user = {
   },
 
   delete: async function (req, res, next) {
-
+    let id = req.query.id;
+    if (!id) {
+      res.json({ code: 0, data: { code: 0, msg:"params empty!"} });
+      return;
+    }
+    try {
+      await User.delete({ id });
+      // await userRole.where({ user_id: id }).update({ role_id: roleID });
+      res.json({
+        code: 200,
+        data: { code: 200, message: "删除成功" },
+      });
+    } catch (e) {
+      console.log(e.message);
+      res.json({ code: 0, data: e.message || e.errors });
+    }
   },
 };
 

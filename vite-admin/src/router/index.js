@@ -2,10 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 import cookies from 'js-cookie';
 import routes from './routes';
 import NProgress from 'nprogress';
-import 'nprogress/nprogress.css' // nprogress样式
+import 'nprogress/nprogress.css'; // nprogress样式
 import userService from '@/services/user';
-// import roleService from '@/services/role';
-// import permissionService from '@/services/permission';
+import classifyService from '@/services/classify';
+import articleService from '@/services/article';
+
 import tokenService from '@/services/token';
 import { useStore } from '@/stores/index.js';
 // import { useRoute } from 'vue-router';
@@ -104,18 +105,29 @@ appRouter.beforeEach(async (to, from, next) => {
       const userId = user.id;
       console.log('路由导航/登录用户ID：', userId);
 
-      // const permissions = await permissionService
-      //   .getPermissions({ userId: userId })
-      //   .then(function (data) {
-      //     return data.permissions;
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //     return;
-      //   });
-      // console.log('路由导航/登录用户权限：', permissions);
-      // store.setPermissions(permissions);
-      // console.log('路由导航/store.permissions：', store.permissions, new Date());
+      const classifications = await classifyService
+        .getClassify()
+        .then(function (data) {
+          return data.classificationsInfo;
+        })
+        .catch(function (error) {
+          console.log(error);
+          return;
+        });
+      store.setClassifications(classifications);
+      console.log('路由导航/store.classifications', store.classifications);
+
+      const articles = await articleService
+        .getArticle()
+        .then(function (data) {
+          return data.articlesInfo;
+        })
+        .catch(function (error) {
+          console.log(error);
+          return;
+        });
+      store.setArticles(articles);
+      console.log('路由导航/store.articles', store.articles);
 
       // 没有要去的页面的权限，就跳去Forbidden页面
       // if (to.meta.permission && !permissions.includes(to.meta.permission) && !['Forbidden'].includes(to.name)) {

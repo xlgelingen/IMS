@@ -5,9 +5,8 @@ export const useStore = defineStore('main', {
     return {
       users: null,
       user: null,
-      roles: null,
-      permissions: [],
-      allPermissions:[],
+      classifications: null,
+      articles: null,
       navRoutes:[]
     }
   },
@@ -18,14 +17,11 @@ export const useStore = defineStore('main', {
     setUser(userInfo){
       this.user= userInfo
     },
-    setRoles(rolesInfo){
-      this.roles = rolesInfo
+    setClassifications(classifications){
+      this.classifications = classifications
     },
-    setPermissions(permissions) {
-      this.permissions = permissions
-    },
-    setAllPermissions(permissions) {
-      this.allPermissions = permissions
+    setArticles(articles) {
+      this.articles = articles
     },
     setNavRoutes(navRoutes){
       this.navRoutes = navRoutes

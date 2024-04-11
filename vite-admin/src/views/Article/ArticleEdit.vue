@@ -1,18 +1,17 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStore } from '@/stores/index.js';
 import { ElMessage } from 'element-plus'
-// import { getEditData } from '@/utils/data.js'
-// import dataService from '@/services/data';
+import articleService from '@/services/article';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import BasicBreadcrumb from '@/components/layout/BasicBreadcrumb.vue';
-import articles from './articles.js';
 
 const router = useRouter();
 const route = useRoute();
-// const store = useStore();
-// const articles = store.articles;
+const store = useStore();
+const articles = store.articles;
+const classifications = store.classifications;
 let editor = ClassicEditor
 
 const articleId = ref(route.params.id);
@@ -32,12 +31,23 @@ onMounted(() => {
         return item.id == Number(articleId.value)
     })
     let articleData = articleDataArr[0]
+    let classifyName = articleData.classify;
+    let classifyArr = classifications.filter((item)=>{
+        return item.name == classifyName;
+    })
+    console.log('文章编辑/classifyArr', classifyArr);
+
+    let classifyId = classifyArr[0].id
+    articleData.classify = String(classifyId)
+    console.log('文章编辑/classifyId', classifyId);
+    console.log('文章编辑/articleData.classify', articleData.classify);
+
     Object.assign(formData.value, articleData);
     Object.assign(originArticle.value, articleData);
     // console.log('文章编辑/articles', articles);
     // console.log('文章编辑/articleData', articleData);
     // console.log('文章编辑/articleId', articleId.value);
-    // console.log('文章编辑/formData', formData.value);
+    console.log('文章编辑/formData', formData.value);
     // console.log('文章编辑/originArticle', originArticle.value);
 });
 
@@ -63,32 +73,30 @@ function handleResetForm() {
 };
 
 async function handleSave() {
-    console.log('项目编辑/formData', formData)
-    ElMessage({
-        message: '编辑成功！',
-        type: 'success',
-    })
-    // await articleService.editArticle(formData).then(function (data) {
-    //     if (data.code === 200) {
-    //         ElMessage({
-    //             message: '新建成功！',
-    //             type: 'success',
-    //         })
-    //         setTimeout(() => {
-    //             router.push({ name: 'ProjectIndex' }).then(() => {
-    //                 window.location.reload();
-    //             });
-    //         }, 700)
-    //     } else {
-    //         ElMessage({
-    //             message: '修改失败！',
-    //             type: 'error',
-    //         })
-    //         console.log(data);
-    //     }
-    // }).catch(function (error) {
-    //     console.log(error);
-    // });
+    formData.value.content = formData.value.content.replace(/<[^>]+>/g, '');
+
+    console.log('formData',formData.value)
+    await articleService.editArticle(formData.value).then(function (data) {
+        if (data.code === 200) {
+            ElMessage({
+                message: '修改成功！',
+                type: 'success',
+            })
+            setTimeout(() => {
+                router.push({ name: 'ArticleIndex' }).then(() => {
+                    window.location.reload();
+                });
+            }, 700)
+        } else {
+            ElMessage({
+                message: '修改失败！',
+                type: 'error',
+            })
+            console.log(data);
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 </script>
@@ -115,10 +123,10 @@ async function handleSave() {
                         </a-form-item>
                         <a-form-item label="分类" name="classify">
                             <a-select v-model:value="formData.classify" placeholder="请选择分类" autocomplete="on">
-                                <a-select-option label="技术动态" value="1" />
-                                <a-select-option label="极客新闻" value="2" />
-                                <a-select-option label="通知公告" value="3" />
-                                <a-select-option label="技术热点" value="4" />
+                                <a-select-option value="1">技术动态</a-select-option>
+                                <a-select-option value="2">极客新闻</a-select-option>
+                                <a-select-option value="3">通知公告</a-select-option>
+                                <a-select-option value="4">技术热点</a-select-option>
                             </a-select>
                         </a-form-item>
                         <a-form-item label="内容" name="formData.content" placeholder="请输入文章内容">

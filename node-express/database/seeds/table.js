@@ -491,11 +491,11 @@ exports.seed = function (knex) {
       { classification_id: 4, article_id: 18 },
       { classification_id: 4, article_id: 19 },
       { classification_id: 4, article_id: 20 },
-      { classification_id: 5, article_id: 21 },
-      { classification_id: 5, article_id: 22 },
-      { classification_id: 5, article_id: 23 },
-      { classification_id: 5, article_id: 24 },
-      { classification_id: 5, article_id: 25 },
+      { classification_id: 1, article_id: 21 },
+      { classification_id: 1, article_id: 22 },
+      { classification_id: 2, article_id: 23 },
+      { classification_id: 3, article_id: 24 },
+      { classification_id: 4, article_id: 25 },
 
     ]),
   ]);
