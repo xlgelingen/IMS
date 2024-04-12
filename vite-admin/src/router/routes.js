@@ -1,9 +1,11 @@
 import BasicLayout from '@/components/layout/BasicLayout.vue';
-import Home from '@/views/HomeIndex.vue';
+// import Home from '@/views/Front/HomeIndex.vue';
+import FrontLayout from '@/views/Front/FrontLayout.vue';
 import NotFound from '@/views/Common/NotFound.vue';
 import Forbidden from '@/views/Common/ForbiddenIndex.vue';
 import AccountLogin from '@/views/Common/AccountLogin.vue';
 import routesArticle from './routesArticle';
+import routesFront from './routesFront';
 const ClassifyIndex = () =>
   import(/* webpackChunkName: "Classify" */ '@/views/Classify/ClassifyIndex.vue');
 const UserIndex = () => import(/* webpackChunkName: "Manager" */ '@/views/Manager/UserIndex.vue');
@@ -49,13 +51,15 @@ export default [
     ]
   },
   {
-    path: '/admin/front',
-    name: 'Home',
-    component: Home,
-    // redirect: {
-    //   name: 'UserIndex'
-    // },
-    children: []
+    path: '/front',
+    name: 'FrontLayout',
+    component: FrontLayout,
+    redirect: {
+      name: 'Home'
+    },
+    children: [
+      ...routesFront
+    ]
   },
   {
     path: '/login',

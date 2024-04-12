@@ -36,8 +36,7 @@ watch(route, (to, from) => {
         <div class="logo-section">
             <div class="header-logo-container">
                 <div class="header-logo-content" v-show="!isCollapse">
-                    <!-- <svg-icon class="header-logo-element" name="siderMenu-logo"></svg-icon> -->
-                    <img src="https://www.jiker.com/_nuxt/img/f43b9a4.svg" class="header-logo" data-v-4b2afc42="">
+                    <img src="@/assets/images/header-logo.svg" class="header-logo" data-v-4b2afc42="">
                     <h1>信息管理</h1>
                 </div>
                 <div class="header-logo-collapse-btn" @click="isCollapse = !isCollapse">

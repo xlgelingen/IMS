@@ -146,7 +146,7 @@ async function handlesubmitUser() {
             }, 700)
         } else {
             ElMessage({
-                message: '修改失败！',
+                message: '新建失败！',
                 type: 'error',
             })
             console.log(data);

@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useStore } from '@/stores/index.js';
 import { ElMessage } from 'element-plus'
 import articleService from '@/services/article';
@@ -9,22 +9,94 @@ import BasicBreadcrumb from '@/components/layout/BasicBreadcrumb.vue';
 
 const router = useRouter();
 const store = useStore();
-const articles = store.articles;
+const originArticles = store.articles;
+let articles = ref(originArticles)
 
 const pageIndex = ref(1);
 const pageSize = ref(10);
 
 const paginationCurrent = ref(1);
-const paginationTotal = articles.length
+const paginationTotal = ref(articles.value.length)
 
 // 使用 slice 方法获取分页后的用户数组
 const startIndex = computed(() => (pageIndex.value - 1) * pageSize.value);
 
 // 使用 slice 方法获取分页后的用户数组
-const tableDatas = computed(() => articles.slice(startIndex.value, startIndex.value + pageSize.value));
+const tableDatas = computed(() => articles.value.slice(startIndex.value, startIndex.value + pageSize.value));
 
 const delDialogVisible = ref(false)
 let delId = ref(null)
+
+const searchData = ref({
+    searchId: '',
+    searchName: '',
+    searchClassify: ''
+})
+
+watch(() => {
+    return paginationTotal.value = articles.value.length;
+})
+
+function handleSearch() {
+    // expertListTableDatasAll.value = originAllDatas;
+    console.log('searchData.value', searchData.value)
+
+    if (!searchData.value.searchId && !searchData.value.searchName && !searchData.value.searchClassify) {
+        ElMessage({
+            message: '请至少输入一个筛选条件',
+            type: 'error',
+        })
+    }
+
+    if (searchData.value.searchId) {
+        console.log('筛选ID')
+        privateSearchFilterData('id', searchData.value.searchId)
+    }
+
+    if (searchData.value.searchName) {
+        console.log('筛选姓名')
+        privateSearchFilterData('name', searchData.value.searchName)
+    }
+
+    if (searchData.value.searchClassify) {
+        console.log('筛选分类')
+        privateSearchFilterData('classify', searchData.value.searchClassify)
+    }
+}
+
+function privateSearchFilterData(key, searchKey) {
+    let filter = articles.value.filter((item) => {
+        if (typeof item.key === 'number') {
+            return item[key] == Number(searchKey);
+        } else {
+            return item[key] == searchKey;
+        }
+    })
+    articles.value = filter;
+    console.log('筛选/articles',articles.value)
+    console.log('筛选/tableDatas',tableDatas.value)
+    pageIndex.value = 1;
+    // expertListTableDatas.value = expertListTableDatasAll.value.slice(startPageIndex.value, startPageIndex.value + pageSize.value);
+    // console.log('筛选/filter', filter)
+    // console.log('筛选/expertListTableDatasAll', expertListTableDatasAll.value)
+    // console.log('筛选/computedExpertListTableDatas', computedExpertListTableDatas.value)
+    // console.log('筛选/expertListTableDatas', expertListTableDatas.value)
+    console.log('筛选/pageIndex', pageIndex.value)
+}
+
+
+function handleRest() {
+    searchData.value = {
+        searchId: '',
+        searchName: '',
+        searchClassify: ''
+    }
+    articles.value = originArticles;
+    console.log('重置/originArticles',originArticles)
+
+    console.log('重置/tableDatas',tableDatas.value)
+
+}
 
 function handelEditArticle(e) {
     let id = Number(e.target.dataset.id);
@@ -71,6 +143,7 @@ function handleOnChange(index, size) {
     pageIndex.value = index;
     pageSize.value = size;
 }
+
 </script>
 
 <template>
@@ -81,6 +154,18 @@ function handleOnChange(index, size) {
                 <div class="addArticle-btn" @click="handelAddArticle">新增文章</div>
             </div>
 
+            <div class="tabel-top">
+                <div class="tabel-search">
+                    <a-input v-model:value="searchData.searchId" class="container-120 tabel-search-input"
+                        placeholder="请输入ID" allow-clear />
+                    <a-input v-model:value="searchData.searchName" class="container-120 tabel-search-input"
+                        placeholder="请输入标题" allow-clear />
+                    <a-input v-model:value="searchData.searchClassify" class="container-120 tabel-search-input"
+                        placeholder="请输入分类" allow-clear />
+                    <el-button type="primary" class="container-60 tabel-search-btn" @click="handleSearch">查询</el-button>
+                    <el-button class="container-60 tabel-reset-btn" @click="handleRest">重置</el-button>
+                </div>
+            </div>
             <div class="content-mainer">
                 <table class="table-container">
                     <tr>
@@ -190,8 +275,47 @@ function handleOnChange(index, size) {
     }
 }
 
+.container-120 {
+    width: 120px;
+
+    &:not(:first-child) {
+        margin-left: 10px;
+    }
+}
+
+.container-60 {
+    width: 60px;
+    margin-left: 10px;
+}
+.tabel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // margin-bottom: 16px;
+    padding: 24px;
+    padding-bottom: 0;
+
+    .tabel-search {
+        display: flex;
+    }
+
+}
+
+.tabel-search .el-input {
+    height: 32px !important;
+}
+
+.tabel-search-btn {
+    background-color: #1890FF;
+
+    &:hover {
+        background-color: #79bbff;
+    }
+}
+
 .content-mainer {
     padding: 24px;
+    padding-top: 0;
     padding-bottom: 60px;
 
 }

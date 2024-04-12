@@ -1,0 +1,60 @@
+<script setup>
+// import { computed } from 'vue'
+// import { useRoute } from 'vue-router'
+import FrontLayoutHeader from './FrontLayoutHeader.vue'
+import BasicLayoutFooter from '@/components/layout/BasicLayoutFooter.vue';
+// const route = useRoute()
+</script>
+
+<template>
+  <div class="page-wrapper">
+    <div class="page-mainer">
+      <FrontLayoutHeader class="page-header" />
+      <div class="page-body">
+        <el-scrollbar>
+          <div class="page-body-content-wrapper">
+            <router-view></router-view>
+            <BasicLayoutFooter class="page-body-footer" />
+          </div>
+        </el-scrollbar>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style type="text/css" lang="less" scoped>
+.page-wrapper {
+  height: 100vh;
+  min-width: fit-content;
+  background: linear-gradient(#ffffff, #f5f5f5 28%);
+  display: flex;
+}
+
+.page-mainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .page-body {
+    flex: 1;
+    padding: 8px;
+    padding-bottom: 0;
+    height: 1px;
+
+    :deep(.el-scrollbar__view) {
+      height: 100%;
+    }
+
+    .page-body-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+  }
+
+  .page-header {
+    flex: none;
+  }
+}
+</style>

@@ -9,7 +9,7 @@ const store = useStore();
 var userName = store.user.name;
 
 function handleGoFront(){
-  router.push({ name: 'Home' })
+  router.push({ name: 'FrontLayout' })
 }
 
 function handleLogout() {
@@ -17,7 +17,6 @@ function handleLogout() {
   Cookies.remove(TOKEN_KEY);
   location.reload()
 }
-
 </script>
 
 <template>
