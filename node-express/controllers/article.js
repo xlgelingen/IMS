@@ -1,3 +1,4 @@
+const moment = require("moment");
 const articleModel = require("../models/article");
 const Article = new articleModel();
 const ClassifyModel = require("../models/classification");
@@ -8,8 +9,18 @@ const articleClassify = new articleClassifyModel();
 const article = {
   index: async function (req, res, next) {
     var articles = await Article.all();
+    console.log("文章控制/articles", articles);
     try {
-      res.json({ code: 200, data: { code: 200, articlesInfo: articles } });
+      console.log("文章控制/调用");
+      var articlesInfo = articles.map((data) => {
+        data.create_time = moment(data.create_time).format(
+          // "YYYY/MM/DD HH:mm:ss"
+          "YYYY/MM/DD"
+        );
+        return data;
+      });
+      // console.log("文章控制/articlesInfo", articlesInfo);
+      res.json({ code: 200, data: { code: 200, articlesInfo: articlesInfo } });
     } catch (e) {
       res.json({ code: 0, data: e });
     }
@@ -48,9 +59,9 @@ const article = {
     let classifyId = req.body.classify;
     let content = req.body.content;
     let id = req.body.id;
-    console.log('文章控制/update：', name, classifyId, content, id);
+    console.log("文章控制/update：", name, classifyId, content, id);
     if (!name || !classifyId || !content || !id) {
-      res.json({ code: 0, data: {code: 0, msg:"params empty!"} });
+      res.json({ code: 0, data: { code: 0, msg: "params empty!" } });
       return;
     }
     try {
@@ -61,7 +72,9 @@ const article = {
       console.log("文章更新classify", classify);
       console.log("文章更新", name, classify, content);
       await Article.update(id, { name, classify, content });
-      await articleClassify.where({ article_id: id }).update({ classification_id: classifyId });
+      await articleClassify
+        .where({ article_id: id })
+        .update({ classification_id: classifyId });
       res.json({
         code: 200,
         data: { code: 200, message: "编辑成功" },

@@ -14,6 +14,7 @@ exports.up = function (knex) {
         table.string("name", 255);
         table.string("classify", 255);
         table.text("content");
+        table.timestamp("create_time").defaultTo(knex.fn.now());
       })
       .createTable("classifications", function (table) {
         table.increments("id");
