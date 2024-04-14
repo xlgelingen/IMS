@@ -15,6 +15,7 @@ const classifications = store.classifications;
 let editor = ClassicEditor
 
 const articleId = ref(route.params.id);
+const formRef = ref();
 const formData = ref({
     name: null,
     classify: null,
@@ -75,6 +76,12 @@ function handleResetForm() {
 async function handleSave() {
     formData.value.content = formData.value.content.replace(/<[^>]+>/g, '');
 
+    const isValid = await formRef.value.validate();
+    if (!isValid) {
+        // 如果验证不通过，则直接返回，不执行后续操作
+        return;
+    }
+
     console.log('formData',formData.value)
     await articleService.editArticle(formData.value).then(function (data) {
         if (data.code === 200) {
@@ -116,7 +123,7 @@ async function handleSave() {
             </div>
             <div class="content-mainer">
                 <div class="content-mainer">
-                    <a-form name="basic" :model="formData" :rules="smsRules" :label-col="{ span: 4 }"
+                    <a-form ref="formRef" name="basic" :model="formData" :rules="smsRules" :label-col="{ span: 4 }"
                         :wrapper-col="{ span: 17 }" :hideRequiredMark="hideRequiredMark" @finish="handleSave">
                         <a-form-item label="标题" name="name">
                             <a-input v-model:value="formData.name" :title="formData.name" placeholder="请输入文章标题" />

@@ -29,13 +29,13 @@ const addRef = ref();
 const addUser = reactive({
     name: null,
     phone: null,
-    password: null,
-    role: null
+    password: null
 })
 
 const userId = ref();
 const loginUserID = store.user.id;
 // console.log('用户列表/loginUserID', loginUserID)
+const editRef = ref()
 var editUser = reactive({});
 const originUser = reactive({});
 
@@ -134,7 +134,13 @@ async function handlesubmitUser() {
         })
         return
     }
-    console.log("name: ", addUser.name, "phone: ", addUser.phone, "password:", addUser.password)
+
+    const isValid = await addRef.value.validate();
+    if (!isValid) {
+        // 如果验证不通过，则直接返回，不执行后续操作
+        return;
+    }
+    // console.log("name: ", addUser.name, "phone: ", addUser.phone, "password:", addUser.password)
     await userService.addUser({ name: addUser.name, phone: addUser.phone, password: addUser.password}).then(function (data) {
         if (data.code === 200) {
             ElMessage({
@@ -164,6 +170,13 @@ async function handleSaveUser() {
         })
         return
     }
+
+    const isValid = await editRef.value.validate();
+    if (!isValid) {
+        // 如果验证不通过，则直接返回，不执行后续操作
+        return;
+    }
+
     console.log('userID:', userId.value, "name: ", editUser.name, "phone: ", editUser.phone, "password:", editUser.password)
 
     if (userId.value == loginUserID) {
@@ -197,6 +210,7 @@ async function handleSaveUser() {
 async function handleEditConfirm() {
     editDialogVisible.value = false;
     editUserVisible.value = false;
+    
     await userService.editUser({ id: userId.value, name: editUser.name, phone: editUser.phone, password: editUser.password }).then(function (data) {
         if (data.code === 200) {
             ElMessage({
@@ -362,7 +376,7 @@ function handleResetadd() {
                 :body-style="{ paddingBottom: '80px' }" :footer-style="{ textAlign: 'right' }"
                 @close="editUserVisible = false">
                 <div class="content-form">
-                    <el-form :model="editUser" :rules="editRules" status-icon label-position="top">
+                    <el-form ref="editRef" :model="editUser" :rules="editRules" status-icon label-position="top">
                         <el-form-item prop="name" label="用户名">
                             <el-input type="text" placeholder="请输入用户名" v-model="editUser.name"
                                 autocomplete="on"></el-input>
@@ -388,7 +402,7 @@ function handleResetadd() {
             <a-drawer title="新建用户" :width="720" :open="addUserVisible" :body-style="{ paddingBottom: '80px' }"
                 :footer-style="{ textAlign: 'right' }" @close="addUserVisible = false">
                 <div class="content-form">
-                    <el-form :ref="addRef" :model="addUser" :rules="addRules" status-icon label-position="top">
+                    <el-form ref="addRef" :model="addUser" :rules="addRules" status-icon label-position="top">
                         <el-form-item prop="name" label="用户名">
                             <el-input type="text" placeholder="请输入用户名" v-model="addUser.name"
                                 autocomplete="on"></el-input>

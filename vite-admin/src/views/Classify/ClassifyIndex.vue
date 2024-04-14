@@ -36,6 +36,7 @@ var editData = reactive({});
 const originData = reactive({});
 
 const addRef = ref();
+const editRef = ref();
 const addData = reactive({
     name: null,
 })
@@ -65,6 +66,13 @@ async function handlesubmitData() {
         })
         return
     }
+
+    const isValid = await addRef.value.validate();
+    if (!isValid) {
+        // 如果验证不通过，则直接返回，不执行后续操作
+        return;
+    }
+
     console.log("name: ", addData.name)
     await classifyService.addClassify({ name: addData.name}).then(function (data) {
         if (data.code === 200) {
@@ -95,6 +103,13 @@ async function handleSaveData() {
         })
         return
     }
+
+    const isValid = await editRef.value.validate();
+    if (!isValid) {
+        // 如果验证不通过，则直接返回，不执行后续操作
+        return;
+    }
+
     console.log('id:', editData.id, "name: ", editData.name)
     await classifyService.editClassify({ name: editData.name, id: editData.id}).then(function (data) {
         if (data.code === 200) {
@@ -207,7 +222,7 @@ function handleResetadd() {
 
             <el-dialog v-model="editDataVisible" :title="`正在编辑的分类名称：${originData.name}`" width="800">
                 <div class="content-form">
-                    <el-form :model="editData" :rules="editRules" status-icon label-position="top">
+                    <el-form ref="editRef" :model="editData" :rules="editRules" status-icon label-position="top">
                         <el-form-item prop="name" label="分类名称">
                             <el-input type="text" placeholder="请输入分类名称" v-model="editData.name"
                                 autocomplete="on"></el-input>
@@ -224,7 +239,7 @@ function handleResetadd() {
 
             <el-dialog v-model="addDataVisible" title="新建分类" width="800">
                 <div class="content-form">
-                    <el-form :ref="addRef" :model="addData" :rules="addRules" status-icon label-position="top">
+                    <el-form ref="addRef" :model="addData" :rules="addRules" status-icon label-position="top">
                         <el-form-item prop="name" label="分类名称">
                             <el-input type="text" placeholder="请输入分类名称" v-model="addData.name"
                                 autocomplete="on"></el-input>

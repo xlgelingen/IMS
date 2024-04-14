@@ -25,11 +25,6 @@ const smsRules = {
             trigger: 'blur'
         }
     ],
-
-    role: [
-        //指定在表单项的值发生变化时触发验证（trigger: 'change'）
-        { required: true, message: '请选择角色', trigger: 'change' }
-    ],
 }
 
 const formRef = ref();
@@ -37,18 +32,18 @@ const formData = reactive({
     name: null,
     phone: null,
     password: null,
-    role: null
 })
 
 async function addUser() {
-    if (!formData.name || !formData.phone || !formData.password || !formData.role) {
+    if (!formData.name || !formData.phone || !formData.password) {
         ElMessage({
             message: "params empty!",
             type: 'error',
         })
+        return
     }
     console.log("name: ", formData.name, "phone: ", formData.phone, "password:", formData.password, "role:", formData.role)
-    await userService.addUser({ name: formData.name, phone: formData.phone, password: formData.password, role: formData.role }).then(function (data) {
+    await userService.addUser({ name: formData.name, phone: formData.phone, password: formData.password}).then(function (data) {
         if (data.code === 200) {
             ElMessage({
                 message: '新建成功！',

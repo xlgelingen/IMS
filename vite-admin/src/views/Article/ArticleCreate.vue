@@ -39,6 +39,11 @@ function handleResetForm() {
 
 async function handleSubmit() {
     formData.content = formData.content.replace(/<[^>]+>/g, '');
+    const isValid = await formRef.value.validate();
+    if (!isValid) {
+        // 如果验证不通过，则直接返回，不执行后续操作
+        return;
+    }
     console.log('项目添加/formData', formData)
     // ElMessage({
     //     message: '新建成功！',
